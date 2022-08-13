@@ -29,4 +29,6 @@ const tmRoll20 = {
     }
 };
 
+console.log("Running Tampermonkey");
+
 tmRoll20.allCharacters();
