@@ -4,6 +4,6 @@ const tmRoll20 = {
     }
 };
 
-console.log("Is Listening");
+console.log("Tamper Monkey Active");
 
 tmRoll20.test();
