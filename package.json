@@ -4,9 +4,9 @@
     "description": "Various Tamper Monkey scripts for use",
     "main": "index.js",
     "scripts": {
-        "push": "echo 'Building' && (tsc || echo 'TSC build failed' --success = first) && echo 'Pushing to GitLab' && git push origin master && echo 'Complete'",
+        "push": "echo 'Cleaning Dist' && rimraf ./.dist/* -r && echo 'Building' && (tsc || echo 'TSC build failed' --success = first) && echo 'Pushing to GitLab' && git push origin master && echo 'Complete'",
         "lint": "eslint --ext .ts ./.src",
-        "build": "tsc",
+        "build": "echo 'Cleaning Dist' && rimraf ./.dist/* -r && echo 'Building' && (tsc || echo 'TSC build failed' --success = first) && echo 'Complete'",
         "newBranch": "gulp createBranch",
         "pullRequest": "gulp createPullRequest",
         "update": "gulp pullMaster",
@@ -46,6 +46,7 @@
         "@types/chai-http": "^3.0.3",
         "@types/csv-parse": "^1.1.12",
         "@types/debug": "0.0.30",
+        "@types/jquery": "^3.5.14",
         "@types/mocha": "^2.2.43",
         "@types/request": "^2.47.1",
         "@typescript-eslint/eslint-plugin": "^5.32.0",
@@ -63,6 +64,7 @@
         "mocha": "^3.5.3",
         "opn": "^5.3.0",
         "prettier": "^2.7.1",
+        "rimraf": "^3.0.2",
         "ts-node": "^3.3.0",
         "typedoc": "^0.15.0",
         "typescript": "^4.7.4"
