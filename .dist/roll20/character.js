@@ -12,7 +12,7 @@ class Character {
         this.characterHealth.max = parseInt(thisChar.view.$charsheet.find("[name='attr_hp_max']")[0].value, 10);
     }
 }
-const tmTest = () => {
+var tmTest = () => {
     console.warn("Running Tampermonkey Test");
     return;
 };
