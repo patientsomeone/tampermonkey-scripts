@@ -23,5 +23,5 @@
 //         return AsyncUtil.eachOfSeries(allCharacters, eachCharacter);
 //     }
 // };
-console.log("Running Tampermonkey");
+console.warn("Running Tampermonkey");
 // tmRoll20.allCharacters();
