@@ -1,10 +1,3 @@
-// import {AsyncUtil} from "../utilities/asyncUtil";
-// import {log, logLine} from "../utilities/log";
-// import {} from "../utilities/debugLog";
-
-// /* Import the Campaign type */
-// import {campaign} from "./.r20Types.d";
-// import {each} from "jquery";
 // /* Declare Campaign as Global Constant */
 // declare const Campaign: campaign;
 
