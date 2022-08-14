@@ -1,1 +1,1 @@
-console.warn("Running Tampermonkey");
+tmTest();
