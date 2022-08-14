@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Character = void 0;
 class Character {
     constructor(r20Id) {
         this.getName = () => {
@@ -15,4 +12,3 @@ class Character {
         this.characterHealth.max = parseInt(thisChar.view.$charsheet.find("[name='attr_hp_max']")[0].value, 10);
     }
 }
-exports.Character = Character;

@@ -1,8 +1,4 @@
-import {campaign} from "./.r20Types.d";
-
-declare const Campaign: campaign;
-
-export class Player {
+class Player {
     private characterName: string;
     
     constructor(r20Id: string) {

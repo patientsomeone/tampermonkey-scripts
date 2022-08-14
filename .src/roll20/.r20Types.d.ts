@@ -1,6 +1,7 @@
-import {anyObject, anyStandard} from "../globalTypes";
+/* Declare Campaign as Global Constant */
+declare const Campaign: campaign;
 
-export type campaign = {
+type campaign = {
     characters: {
         _byId: {
             [key: string]: {

@@ -1,9 +1,4 @@
-/* Import the Campaign type */
-import {campaign} from "./.r20Types.d";
-/* Declare Campaign as Global Constant */
-declare const Campaign: campaign;
-
-export class Character {
+class Character {
     private characterName: string;
     private characterHealth: {
         current: number;
