@@ -2,28 +2,29 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Properties = void 0;
 /* UTILITIES */
-const dBug_1 = require("../utilities/dBug");
-const fsUtils_1 = require("../utilities/fsUtils");
-const log_1 = require("../utilities/log");
-const objecExtend_1 = require("../utilities/objecExtend");
-const srcPath_1 = require("../utilities/srcPath");
-const debg = new dBug_1.dBug("utilities:fetchProperties");
-class Properties {
-    constructor(intendedProperties) {
+var dBug_1 = require("../utilities/dBug");
+var fsUtils_1 = require("../utilities/fsUtils");
+var log_1 = require("../utilities/log");
+var objecExtend_1 = require("../utilities/objecExtend");
+var srcPath_1 = require("../utilities/srcPath");
+var debg = new dBug_1.dBug("utilities:fetchProperties");
+var Properties = /** @class */ (function () {
+    function Properties(intendedProperties) {
         this.fetch = function () {
-            const fs = new fsUtils_1.FsUtils((0, srcPath_1.srcPath)("properties.i.json"));
-            const debFetch = debg.set("Properties:fetch");
+            var _this = this;
+            var fs = new fsUtils_1.FsUtils((0, srcPath_1.srcPath)("properties.i.json"));
+            var debFetch = debg.set("Properties:fetch");
             debFetch("Fetching Properties");
             return fs.read.properties(this.intendedProperties)
-                .then((props) => {
+                .then(function (props) {
                 debFetch("Properties Received");
                 debFetch(props);
-                this.properties = (0, objecExtend_1.objectExtend)(this.intendedProperties, props);
+                _this.properties = (0, objecExtend_1.objectExtend)(_this.intendedProperties, props);
                 debFetch("Properties Set");
-                debFetch(this.properties);
-                return Promise.resolve(this.properties);
+                debFetch(_this.properties);
+                return Promise.resolve(_this.properties);
             })
-                .catch((err) => {
+                .catch(function (err) {
                 debFetch("Something went wrong");
                 debFetch(err);
                 return Promise.reject(err);
@@ -32,10 +33,11 @@ class Properties {
         this.properties = {};
         this.intendedProperties = intendedProperties;
     }
-}
+    return Properties;
+}());
 exports.Properties = Properties;
-const test = () => {
-    const testProps = new Properties({
+var test = function () {
+    var testProps = new Properties({
         test: "tested",
         anotherTest: {
             successA: true,

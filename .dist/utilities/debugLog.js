@@ -1,5 +1,5 @@
-const isDebug = true;
-const debugLog = (msg) => {
+var isDebug = true;
+var debugLog = function (msg) {
     if (!isDebug) {
         return;
     }
@@ -7,6 +7,6 @@ const debugLog = (msg) => {
         console.log(msg);
     }
 };
-const log = (msg) => {
+var log = function (msg) {
     console.log(msg);
 };

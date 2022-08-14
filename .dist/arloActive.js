@@ -14,9 +14,9 @@ window.tmArlo = {
     timeoutsActivated: 0,
     cameraChecksMade: 0,
     timeoutChecksMade: 0,
-    createButton: () => {
-        const activationCta = document.createElement("button");
-        const body = document.querySelector("body");
+    createButton: function () {
+        var activationCta = document.createElement("button");
+        var body = document.querySelector("body");
         activationCta.innerHTML = "Start Stream";
         activationCta.id = "tmActivatorButton";
         activationCta.style.position = "absolute";
@@ -32,35 +32,35 @@ window.tmArlo = {
         body.appendChild(activationCta);
         window.tmArlo.setButton("initialize");
     },
-    setButton: (status) => {
-        const activationCta = document.querySelector("#tmActivatorButton");
-        const statusSets = {
-            end: () => {
+    setButton: function (status) {
+        var activationCta = document.querySelector("#tmActivatorButton");
+        var statusSets = {
+            end: function () {
                 activationCta.removeEventListener("click", window.tmArlo.start);
                 activationCta.addEventListener("click", window.tmArlo.end);
             },
-            initialize: () => {
+            initialize: function () {
                 activationCta.addEventListener("click", window.tmArlo.start);
             },
-            start: () => {
+            start: function () {
                 activationCta.removeEventListener("click", window.tmArlo.end);
                 activationCta.addEventListener("click", window.tmArlo.start);
             }
         };
         if (!statusSets.hasOwnProperty(status)) {
             console.error("Unable to set Button Status");
-            console.warn(`${status} does not exist`);
+            console.warn("".concat(status, " does not exist"));
         }
         else {
             statusSets[status]();
         }
     },
-    playAll: () => {
-        const playButtons = document.querySelectorAll(".arlo-cp.camera-play-live");
-        const totalPlayButtons = playButtons.length;
-        for (let i = 0; i < totalPlayButtons; i += 1) {
+    playAll: function () {
+        var playButtons = document.querySelectorAll(".arlo-cp.camera-play-live");
+        var totalPlayButtons = playButtons.length;
+        for (var i = 0; i < totalPlayButtons; i += 1) {
             console.log("Activating Camera");
-            const thisplayButton = playButtons[i];
+            var thisplayButton = playButtons[i];
             if (!!thisplayButton) {
                 window.tmArlo.camerasActivated += 1;
                 thisplayButton.click();
@@ -69,12 +69,12 @@ window.tmArlo = {
         ;
         setTimeout(null, 1500);
     },
-    stopAll: () => {
-        const buttons = document.querySelectorAll(".cameras_box-inner .cameras-control.cameras-pause");
-        const totalButtons = buttons.length;
-        for (let i = 0; i < totalButtons; i += 1) {
+    stopAll: function () {
+        var buttons = document.querySelectorAll(".cameras_box-inner .cameras-control.cameras-pause");
+        var totalButtons = buttons.length;
+        for (var i = 0; i < totalButtons; i += 1) {
             console.log("DeActivating Camera");
-            const thisButton = buttons[i];
+            var thisButton = buttons[i];
             if (!!thisButton) {
                 window.tmArlo.camerasDeActivated += 1;
                 thisButton.click();
@@ -82,37 +82,37 @@ window.tmArlo = {
         }
         setTimeout(null, 1500);
     },
-    checkActive: () => {
-        const allCameras = document.querySelectorAll(".cameras-wrapper .arlo-cp.camera-play-live");
+    checkActive: function () {
+        var allCameras = document.querySelectorAll(".cameras-wrapper .arlo-cp.camera-play-live");
         window.tmArlo.cameraChecksMade = +1;
         return allCameras.length > 0;
     },
-    checkTimeouts: () => {
-        const allTimeouts = document.querySelectorAll(".cameras-wrapper .arlo-cp.camera-play-live .ng-star-inserted button");
+    checkTimeouts: function () {
+        var allTimeouts = document.querySelectorAll(".cameras-wrapper .arlo-cp.camera-play-live .ng-star-inserted button");
         window.tmArlo.timeoutChecksMade = +1;
         return allTimeouts.length > 0;
     },
-    resetTimeouts: () => {
-        const allTimeouts = document.querySelectorAll(".cameras-wrapper .arlo-cp.camera-play-live .ng-star-inserted button");
-        const totalTimeouts = allTimeouts.length;
-        for (let i = 0; i < totalTimeouts; i += 1) {
+    resetTimeouts: function () {
+        var allTimeouts = document.querySelectorAll(".cameras-wrapper .arlo-cp.camera-play-live .ng-star-inserted button");
+        var totalTimeouts = allTimeouts.length;
+        for (var i = 0; i < totalTimeouts; i += 1) {
             console.log("Activating Camera");
-            const thisTimeout = allTimeouts[i];
+            var thisTimeout = allTimeouts[i];
             if (!!thisTimeout) {
                 window.tmArlo.timeoutsActivated += 1;
                 thisTimeout.click();
             }
         }
     },
-    needsLogin: () => {
-        const loginButton = document.querySelectorAll("button.login-button");
+    needsLogin: function () {
+        var loginButton = document.querySelectorAll("button.login-button");
         return loginButton.length > 0;
     },
     timeoutId: 0,
-    run: () => {
+    run: function () {
         window.tmArlo.timeoutId = setTimeout(window.tmArlo.initialize, 500);
     },
-    initialize: () => {
+    initialize: function () {
         clearTimeout(window.tmArlo.timeoutId);
         if (window.tmArlo.checkTimeouts()) {
             window.tmArlo.resetTimeouts();
@@ -125,13 +125,13 @@ window.tmArlo = {
         ;
         window.tmArlo.run();
     },
-    end: () => {
+    end: function () {
         clearTimeout(window.tmArlo.timeoutId);
         document.querySelector("#arlo-header.header").style.display = "block";
         window.tmArlo.stopAll();
         window.tmArlo.setButton("start");
     },
-    start: () => {
+    start: function () {
         if (!window.tmArlo.needsLogin()) {
             console.log("Starting Arlo Activator");
             document.querySelector("#arlo-header.header").style.display = "none";

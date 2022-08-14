@@ -2,31 +2,32 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Connection = void 0;
 /* Import UTILITIES */
-const dBug_1 = require("./dBug");
-const unirest = require("unirest");
-const deb = new dBug_1.dBug("utilities:uniRest");
+var dBug_1 = require("./dBug");
+var unirest = require("unirest");
+var deb = new dBug_1.dBug("utilities:uniRest");
 // export type unirestMethods = "get" | "post" | "patch" | "put" | "head"
 /*-- TODO: Write CSV Baseline processor --*/
-class Connection {
-    constructor(initialCookie) {
+var Connection = /** @class */ (function () {
+    function Connection(initialCookie) {
+        var _this = this;
         this.cookie = {
             /**
              * Sets cookie
              */
-            set: (cookieData) => {
-                return new Promise((resolve, reject) => {
-                    const debSetCookie = deb.set("cookie:set");
+            set: function (cookieData) {
+                return new Promise(function (resolve, reject) {
+                    var debSetCookie = deb.set("cookie:set");
                     debSetCookie((0, dBug_1.debLine)("Attempting to set provided cookies"));
                     debSetCookie(cookieData);
                     if (Object.keys(cookieData).length > 0) {
                         debSetCookie("Cookies identified. Processing...");
-                        for (const key in cookieData) {
+                        for (var key in cookieData) {
                             if (cookieData.hasOwnProperty(key)) {
-                                this.jar.add(`${key}=${cookieData[key].value}`, cookieData[key].path || "/");
+                                _this.jar.add("".concat(key, "=").concat(cookieData[key].value), cookieData[key].path || "/");
                             }
                         }
                         debSetCookie((0, dBug_1.debLine)("JAR UPDATED:"));
-                        debSetCookie(this.cookie.get());
+                        debSetCookie(_this.cookie.get());
                         Promise.resolve();
                     }
                     else {
@@ -38,20 +39,20 @@ class Connection {
             /**
              * Returns readable cookie jar
              */
-            get: () => {
-                return this.jar._jar;
+            get: function () {
+                return _this.jar._jar;
             },
             /**
              * Returns Cookie for use in Unirest methods
              */
-            use: () => {
-                return this.jar;
+            use: function () {
+                return _this.jar;
             }
         };
-        this.request = (config) => {
-            return new Promise((resolve, reject) => {
-                const debRequest = deb.set("request");
-                const checkError = (response) => {
+        this.request = function (config) {
+            return new Promise(function (resolve, reject) {
+                var debRequest = deb.set("request");
+                var checkError = function (response) {
                     if (response.body.hasOwnProperty("errorCode") && response.body.errorCode !== "") {
                         debRequest("Error processed via");
                         debRequest(response.body.errorSummary);
@@ -70,8 +71,8 @@ class Connection {
                 unirest[config.method](config.url, config.headers)
                     // .headers(config.headers)
                     .auth(config.auth)
-                    .jar(this.cookie.use())
-                    .end((response) => {
+                    .jar(_this.cookie.use())
+                    .end(function (response) {
                     debRequest("Response received");
                     debRequest(response);
                     if (response.body.hasOwnProperty("error") && response.body.errorCode !== "") {
@@ -105,5 +106,6 @@ class Connection {
             this.cookie.set(initialCookie);
         }
     }
-}
+    return Connection;
+}());
 exports.Connection = Connection;

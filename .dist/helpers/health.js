@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const log_1 = require("../utilities/log");
-const health = () => {
+var log_1 = require("../utilities/log");
+var health = function () {
     return {
         status: "Okay"
     };

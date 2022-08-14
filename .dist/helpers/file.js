@@ -2,51 +2,52 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Json = void 0;
 /* Import UTILITIES */
-const dBug_1 = require("../utilities/dBug");
-const fsUtils_1 = require("../utilities/fsUtils");
-const deb = new dBug_1.dBug("helpers:file");
-class Json {
-    constructor(filePath, jsonTemplate, options) {
-        this.get = () => {
-            const debGet = deb.set("json");
+var dBug_1 = require("../utilities/dBug");
+var fsUtils_1 = require("../utilities/fsUtils");
+var deb = new dBug_1.dBug("helpers:file");
+var Json = /** @class */ (function () {
+    function Json(filePath, jsonTemplate, options) {
+        var _this = this;
+        this.get = function () {
+            var debGet = deb.set("json");
             debGet((0, dBug_1.debLine)());
-            debGet(`Checking for file ${this.filePath}`);
-            this.workingData.filePath = this.filePath;
+            debGet("Checking for file ".concat(_this.filePath));
+            _this.workingData.filePath = _this.filePath;
             /* Check existance of intended file */
-            return this.file.check()
-                .then((data) => {
+            return _this.file.check()
+                .then(function (data) {
                 /* Read file */
                 debGet("File check succeeded");
-                return this.file.read.raw()
-                    .then((readData) => {
-                    const jsonContents = JSON.parse(readData.data);
+                return _this.file.read.raw()
+                    .then(function (readData) {
+                    var jsonContents = JSON.parse(readData.data);
                     debGet("File contents read");
                     debGet(jsonContents);
                     return Promise.resolve(jsonContents);
                 });
-            }, (err) => {
+            }, function (err) {
                 /* Create file */
-                debGet(`File Not located. AutoCreate set to ${this.options.autoCreate}. | ${this.options.autoCreate ? "Creating file" : "Stopping"}`);
-                this.workingData.exists = false;
-                if (!this.options.autoCreate) {
+                debGet("File Not located. AutoCreate set to ".concat(_this.options.autoCreate, ". | ").concat(_this.options.autoCreate ? "Creating file" : "Stopping"));
+                _this.workingData.exists = false;
+                if (!_this.options.autoCreate) {
                     debGet("File creation declined");
-                    return Promise.reject(this.workingData);
+                    return Promise.reject(_this.workingData);
                 }
                 debGet("Attempting file creation");
-                return this.file.create.json(this.jsonTemplate)
-                    .then((result) => {
+                return _this.file.create.json(_this.jsonTemplate)
+                    .then(function (result) {
                     debGet("File creation successful");
                     debGet(result);
-                    this.workingData.created = true;
-                    this.workingData.error = result.error;
-                    this.workingData.data = result.data;
-                    return Promise.reject(this.workingData);
-                }, (err) => {
+                    _this.workingData.created = true;
+                    _this.workingData.error = result.error;
+                    _this.workingData.data = result.data;
+                    return Promise.reject(_this.workingData);
+                }, function (err) {
                     debGet("File creation failed");
                     debGet(err);
-                    this.workingData.data = err.data;
-                    this.workingData.error = err.error;
-                    return Promise.reject(this.workingData);
+                    _this.workingData.data = err.data;
+                    _this.workingData.error = err.error;
+                    return Promise.reject(_this.workingData);
                 });
             });
         };
@@ -59,5 +60,6 @@ class Json {
             created: false
         };
     }
-}
+    return Json;
+}());
 exports.Json = Json;

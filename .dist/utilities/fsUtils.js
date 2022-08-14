@@ -1,93 +1,94 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FsUtils = void 0;
-const dBug_1 = require("../utilities/dBug");
-const log_1 = require("../utilities/log");
-const objecExtend_1 = require("../utilities/objecExtend");
+var dBug_1 = require("../utilities/dBug");
+var log_1 = require("../utilities/log");
+var objecExtend_1 = require("../utilities/objecExtend");
 /* Import MODULES */
-const fs = require("fs");
-const JSONStream = require("JSONStream");
-const deb = new dBug_1.dBug("utilities:fsUtils");
-class FsUtils {
-    constructor(filePath) {
+var fs = require("fs");
+var JSONStream = require("JSONStream");
+var deb = new dBug_1.dBug("utilities:fsUtils");
+var FsUtils = /** @class */ (function () {
+    function FsUtils(filePath) {
+        var _this = this;
         /**
          * Reads file defined in filePath, returns data in utf-8
          * @param filePath Path to file to be read
          */
         this.read = {
-            raw: () => {
-                return new Promise((resolve, reject) => {
-                    const debRead = deb.set("read:raw");
+            raw: function () {
+                return new Promise(function (resolve, reject) {
+                    var debRead = deb.set("read:raw");
                     debRead((0, dBug_1.debLine)("CURRENT WORKING DATA"));
-                    debRead(this.workingData);
-                    fs.readFile(this.workingData.filePath, "utf-8", (error, data) => {
+                    debRead(_this.workingData);
+                    fs.readFile(_this.workingData.filePath, "utf-8", function (error, data) {
                         if (!error) {
-                            debRead((0, dBug_1.debLine)(`FILE READ SUCCESS`));
-                            this.workingData.data = data;
-                            this.workingData.error = error;
-                            resolve(this.workingData);
+                            debRead((0, dBug_1.debLine)("FILE READ SUCCESS"));
+                            _this.workingData.data = data;
+                            _this.workingData.error = error;
+                            resolve(_this.workingData);
                         }
                         else {
-                            debRead((0, dBug_1.debLine)(`FILE READ ERROR`));
-                            this.workingData.data = data;
-                            this.workingData.error = error;
-                            reject(this.workingData);
+                            debRead((0, dBug_1.debLine)("FILE READ ERROR"));
+                            _this.workingData.data = data;
+                            _this.workingData.error = error;
+                            reject(_this.workingData);
                         }
                     });
                 });
             },
-            properties: (defaultProperties) => {
-                const deb = this.deb.set("read:properties");
-                return this.check()
-                    .then(this.read.raw)
-                    .catch((error) => {
+            properties: function (defaultProperties) {
+                var deb = _this.deb.set("read:properties");
+                return _this.check()
+                    .then(_this.read.raw)
+                    .catch(function (error) {
                     deb("No Properties file located. Creating");
-                    return this.create.json(defaultProperties)
-                        .then(() => {
+                    return _this.create.json(defaultProperties)
+                        .then(function () {
                         return Promise.resolve(defaultProperties);
                     });
                 })
-                    .then((result) => {
+                    .then(function (result) {
                     deb("Properties File available");
                     deb("File Results");
                     deb(result);
                     // @ts-ignore
-                    const data = JSON.parse(result.data);
+                    var data = JSON.parse(result.data);
                     deb("Data Parsed");
                     deb(data);
-                    const newData = (0, objecExtend_1.objectExtend)(defaultProperties, data);
-                    this.create.json(newData);
+                    var newData = (0, objecExtend_1.objectExtend)(defaultProperties, data);
+                    _this.create.json(newData);
                     return Promise.resolve(newData);
                 });
             },
-            jsonStream: (iterator) => {
-                return new Promise((resolve, reject) => {
-                    const debRead = deb.set("read:jsonStream");
+            jsonStream: function (iterator) {
+                return new Promise(function (resolve, reject) {
+                    var debRead = deb.set("read:jsonStream");
                     debRead((0, dBug_1.debLine)("CURRENT WORKING DATA"));
-                    debRead(this.workingData);
-                    const readStream = fs.createReadStream(this.workingData.filePath);
-                    const parser = JSONStream.parse();
+                    debRead(_this.workingData);
+                    var readStream = fs.createReadStream(_this.workingData.filePath);
+                    var parser = JSONStream.parse();
                     readStream.pipe(parser);
                     parser.on("data", iterator);
                     // parser.on("data", (data) => {
                     //     log(`key: ${data.key}`);
                     //     log(`value: ${data.value}`);
                     // });
-                    parser.on("end", () => {
+                    parser.on("end", function () {
                         Promise.resolve();
                     });
-                    fs.readFile(this.workingData.filePath, "utf-8", (error, data) => {
+                    fs.readFile(_this.workingData.filePath, "utf-8", function (error, data) {
                         if (!error) {
-                            debRead((0, dBug_1.debLine)(`FILE READ SUCCESS`));
-                            this.workingData.data = data;
-                            this.workingData.error = error;
-                            resolve(this.workingData);
+                            debRead((0, dBug_1.debLine)("FILE READ SUCCESS"));
+                            _this.workingData.data = data;
+                            _this.workingData.error = error;
+                            resolve(_this.workingData);
                         }
                         else {
-                            debRead((0, dBug_1.debLine)(`FILE READ ERROR`));
-                            this.workingData.data = data;
-                            this.workingData.error = error;
-                            reject(this.workingData);
+                            debRead((0, dBug_1.debLine)("FILE READ ERROR"));
+                            _this.workingData.data = data;
+                            _this.workingData.error = error;
+                            reject(_this.workingData);
                         }
                     });
                 });
@@ -115,103 +116,103 @@ class FsUtils {
         //     })
         // }
         this.create = {
-            json: (input) => {
-                const debCreate = deb.set("create:json");
+            json: function (input) {
+                var debCreate = deb.set("create:json");
                 debCreate((0, dBug_1.debLine)("CURRENT WORKING DATA"));
-                debCreate(this.workingData);
-                return new Promise((resolve, reject) => {
-                    const json = JSON.stringify(input);
-                    this.workingData.data = json;
-                    debCreate(`Attempting to create JSON File at ${this.workingData.filePath}`);
+                debCreate(_this.workingData);
+                return new Promise(function (resolve, reject) {
+                    var json = JSON.stringify(input);
+                    _this.workingData.data = json;
+                    debCreate("Attempting to create JSON File at ".concat(_this.workingData.filePath));
                     debCreate(json);
-                    fs.writeFile(this.workingData.filePath, json, "utf-8", (error) => {
+                    fs.writeFile(_this.workingData.filePath, json, "utf-8", function (error) {
                         if (!error) {
-                            this.workingData.error = error;
-                            debCreate(`File write complete`);
-                            resolve(this.workingData);
+                            _this.workingData.error = error;
+                            debCreate("File write complete");
+                            resolve(_this.workingData);
                         }
                         else {
-                            this.workingData.error = error;
-                            debCreate((0, dBug_1.debLine)(`WRITE ERROR ENCOUNTERED`));
+                            _this.workingData.error = error;
+                            debCreate((0, dBug_1.debLine)("WRITE ERROR ENCOUNTERED"));
                             debCreate(error);
-                            reject(this.workingData);
+                            reject(_this.workingData);
                         }
                     });
                 });
             },
-            raw: (input) => {
-                const debCreate = deb.set("create:raw");
+            raw: function (input) {
+                var debCreate = deb.set("create:raw");
                 debCreate((0, dBug_1.debLine)("CURRENT WORKING DATA"));
-                debCreate(this.workingData);
-                return new Promise((resolve, reject) => {
-                    this.workingData.data = input;
-                    debCreate(`Attempting to create JSON File at ${this.workingData.filePath}`);
+                debCreate(_this.workingData);
+                return new Promise(function (resolve, reject) {
+                    _this.workingData.data = input;
+                    debCreate("Attempting to create JSON File at ".concat(_this.workingData.filePath));
                     debCreate(input);
-                    fs.writeFile(this.workingData.filePath, input, "utf-8", (error) => {
+                    fs.writeFile(_this.workingData.filePath, input, "utf-8", function (error) {
                         if (!error) {
-                            this.workingData.error = error;
-                            debCreate(`File write complete`);
-                            resolve(this.workingData);
+                            _this.workingData.error = error;
+                            debCreate("File write complete");
+                            resolve(_this.workingData);
                         }
                         else {
-                            this.workingData.error = error;
-                            debCreate((0, dBug_1.debLine)(`WRITE ERROR ENCOUNTERED`));
+                            _this.workingData.error = error;
+                            debCreate((0, dBug_1.debLine)("WRITE ERROR ENCOUNTERED"));
                             debCreate(error);
-                            reject(this.workingData);
+                            reject(_this.workingData);
                         }
                     });
                 });
             }
         };
         this.writeStream = {
-            json: (input) => {
-                const debCreate = deb.set("create:json");
+            json: function (input) {
+                var debCreate = deb.set("create:json");
                 debCreate((0, dBug_1.debLine)("CURRENT WORKING DATA"));
-                debCreate(this.workingData);
-                return new Promise((resolve, reject) => {
-                    const json = JSON.stringify(input);
-                    this.workingData.data = json;
-                    this.wStream = fs.createWriteStream(this.workingData.filePath);
-                    debCreate(`Attempting to create JSON File at ${this.workingData.filePath}`);
+                debCreate(_this.workingData);
+                return new Promise(function (resolve, reject) {
+                    var json = JSON.stringify(input);
+                    _this.workingData.data = json;
+                    _this.wStream = fs.createWriteStream(_this.workingData.filePath);
+                    debCreate("Attempting to create JSON File at ".concat(_this.workingData.filePath));
                     debCreate(json);
-                    this.wStream.write(json, "utf-8", (error) => {
+                    _this.wStream.write(json, "utf-8", function (error) {
                         if (!error) {
-                            this.workingData.error = error;
-                            debCreate(`File write complete`);
-                            resolve(this.workingData);
+                            _this.workingData.error = error;
+                            debCreate("File write complete");
+                            resolve(_this.workingData);
                         }
                         else {
-                            this.workingData.error = error;
-                            debCreate((0, dBug_1.debLine)(`WRITE ERROR ENCOUNTERED`));
+                            _this.workingData.error = error;
+                            debCreate((0, dBug_1.debLine)("WRITE ERROR ENCOUNTERED"));
                             debCreate(error);
-                            reject(this.workingData);
+                            reject(_this.workingData);
                         }
                     });
                 });
             }
         };
-        this.check = () => {
-            return new Promise((resolve, reject) => {
-                const debCheck = deb.set("checkFile");
+        this.check = function () {
+            return new Promise(function (resolve, reject) {
+                var debCheck = deb.set("checkFile");
                 debCheck((0, dBug_1.debLine)("CURRENT WORKING DATA"));
-                debCheck(this.workingData);
-                fs.access(this.workingData.filePath, fs.constants.F_OK, (error) => {
+                debCheck(_this.workingData);
+                fs.access(_this.workingData.filePath, fs.constants.F_OK, function (error) {
                     if (!error) {
-                        debCheck(`${this.workingData.filePath} exists.`);
-                        this.workingData.error = error;
-                        resolve(this.workingData);
+                        debCheck("".concat(_this.workingData.filePath, " exists."));
+                        _this.workingData.error = error;
+                        resolve(_this.workingData);
                     }
                     else {
-                        (0, log_1.logLine)(`${this.workingData.filePath} does not exist.`);
-                        this.workingData.error = error;
-                        reject(this.workingData);
+                        (0, log_1.logLine)("".concat(_this.workingData.filePath, " does not exist."));
+                        _this.workingData.error = error;
+                        reject(_this.workingData);
                     }
                 });
             });
         };
-        this.delete = () => {
-            return new Promise((resolve, reject) => {
-                fs.unlink(this.workingData.filePath, (err) => {
+        this.delete = function () {
+            return new Promise(function (resolve, reject) {
+                fs.unlink(_this.workingData.filePath, function (err) {
                     if (!err) {
                         resolve("success");
                     }
@@ -222,11 +223,12 @@ class FsUtils {
             });
         };
         this.workingData = {
-            filePath,
+            filePath: filePath,
             error: null,
             data: null
         };
         this.deb = new dBug_1.dBug("utilities:fsUtils");
     }
-}
+    return FsUtils;
+}());
 exports.FsUtils = FsUtils;

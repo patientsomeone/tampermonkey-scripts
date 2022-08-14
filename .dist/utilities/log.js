@@ -1,25 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logLine = exports.err = exports.log = void 0;
-const debug = require("debug");
-const dBug_1 = require("../utilities/dBug");
+var debug = require("debug");
+var dBug_1 = require("../utilities/dBug");
 exports.log = debug("logger*");
 exports.err = debug("---ERROR*");
-const deb = new dBug_1.dBug("log");
+var deb = new dBug_1.dBug("log");
 /**
  * Pad text to a certain number of characters for uniform outputs
  * @param msg Message to be padded
  * @param indent Number of times to indent (by 5 "spaces");
  */
-const padMsg = (msg, indent, newLineChar, isErr) => {
-    const db = deb.set("padMsg");
-    const indentCount = 5;
-    let messageLength = 130;
-    const workingMsg = msg;
-    const pad = (toInsert, eqOnly) => {
-        const pad = [];
-        db(`Adding padding ${toInsert}`);
-        for (let i = toInsert - 1; i >= 0; i -= 1) {
+var padMsg = function (msg, indent, newLineChar, isErr) {
+    var db = deb.set("padMsg");
+    var indentCount = 5;
+    var messageLength = 130;
+    var workingMsg = msg;
+    var pad = function (toInsert, eqOnly) {
+        var pad = [];
+        db("Adding padding ".concat(toInsert));
+        for (var i = toInsert - 1; i >= 0; i -= 1) {
             if (!eqOnly && i > indentCount) {
                 pad.push(" ");
             }
@@ -29,18 +29,18 @@ const padMsg = (msg, indent, newLineChar, isErr) => {
         }
         return pad.join("");
     };
-    const getIndent = () => {
-        const toInd = (indent * indentCount);
+    var getIndent = function () {
+        var toInd = (indent * indentCount);
         messageLength -= toInd;
         return pad(toInd, true) + " " + (toInd === indentCount ? workingMsg.toUpperCase() : workingMsg);
     };
-    let applyJoin = "";
-    const getNewLine = (data, newLineChar, initialIndent) => {
-        const nDb = deb.set("padMsg:getNewLine");
-        let splitLines = [];
-        const currentData = (data || workingMsg).toString();
-        const strArr = (() => {
-            const splitChecks = {
+    var applyJoin = "";
+    var getNewLine = function (data, newLineChar, initialIndent) {
+        var nDb = deb.set("padMsg:getNewLine");
+        var splitLines = [];
+        var currentData = (data || workingMsg).toString();
+        var strArr = (function () {
+            var splitChecks = {
                 " ": {
                     reapply: false
                 },
@@ -51,14 +51,14 @@ const padMsg = (msg, indent, newLineChar, isErr) => {
                     reapply: true
                 }
             };
-            nDb(`Processing Log ${currentData}`);
-            nDb(`    data: ${data}`);
-            nDb(`    workingMsg: ${workingMsg}`);
+            nDb("Processing Log ".concat(currentData));
+            nDb("    data: ".concat(data));
+            nDb("    workingMsg: ".concat(workingMsg));
             if (newLineChar && currentData.indexOf(newLineChar) > 0) {
                 return currentData.split(newLineChar);
             }
             else {
-                for (const key in splitChecks) {
+                for (var key in splitChecks) {
                     if (currentData.indexOf(key) >= 0) {
                         if (splitChecks[key].reapply) {
                             applyJoin = key;
@@ -69,12 +69,12 @@ const padMsg = (msg, indent, newLineChar, isErr) => {
                 return [currentData];
             }
         })();
-        const updateIndent = () => {
-            const newIndent = (splitLines.length > 1 ? ((initialIndent || indent) + 1) : (initialIndent || indent));
+        var updateIndent = function () {
+            var newIndent = (splitLines.length > 1 ? ((initialIndent || indent) + 1) : (initialIndent || indent));
             // messageLength -= newIndent * indentCount;
             return newIndent;
         };
-        const newOnChar = (currentItem) => {
+        var newOnChar = function (currentItem) {
             if (currentItem.length < (messageLength - updateIndent() * indentCount)) {
                 splitLines.push(pad(updateIndent() * indentCount, true) + " " + currentItem /*  + pad(messageLength - currentItem.length) */);
             }
@@ -82,26 +82,26 @@ const padMsg = (msg, indent, newLineChar, isErr) => {
                 splitLines = getNewLine(currentItem, false, updateIndent() + 1).concat(splitLines);
             }
         };
-        let currentLine = pad(updateIndent() * indentCount, true);
-        const newOnLength = (currentItem) => {
-            db(`Processing New on Length`);
-            db(`Input: ${currentItem}`);
+        var currentLine = pad(updateIndent() * indentCount, true);
+        var newOnLength = function (currentItem) {
+            db("Processing New on Length");
+            db("Input: ".concat(currentItem));
             if ((currentItem.length + currentLine.length) < (messageLength - (updateIndent() * indentCount) - 4)) {
-                db(`Adding to current Line`);
+                db("Adding to current Line");
                 if (currentLine.slice(-1) !== " " && currentLine.slice(-1) !== "/" && currentLine.slice(-1) !== "\\") {
-                    db(`Current Line does not end in space, adding space`);
+                    db("Current Line does not end in space, adding space");
                     currentLine += " ";
                 }
                 currentLine += currentItem.trim() + applyJoin;
-                db(`Current Line: ${currentLine}`);
+                db("Current Line: ".concat(currentLine));
             }
             else if ((currentItem.length + currentLine.length) >= (messageLength - updateIndent() * indentCount)) {
-                db(`Too Long, breaking down`);
+                db("Too Long, breaking down");
                 // splitLines.push(currentLine + pad(messageLength - currentLine.length));
-                db(`Current Split Lines: ${splitLines.join(" **&&** ")}`);
+                db("Current Split Lines: ".concat(splitLines.join(" **&&** ")));
                 splitLines = (getNewLine(currentItem, false, updateIndent() + 1)).concat(splitLines);
                 applyJoin = "";
-                db(`Broke down lines to ${splitLines.join("")}`);
+                db("Broke down lines to ".concat(splitLines.join("")));
             }
             else {
                 splitLines.push(currentLine /*  + pad(messageLength - updateIndent() * indentCount) */);
@@ -109,7 +109,7 @@ const padMsg = (msg, indent, newLineChar, isErr) => {
             }
             // splitLines.push(currentItem);
         };
-        for (let i = 0; i < strArr.length; i += 1) {
+        for (var i = 0; i < strArr.length; i += 1) {
             if (!newLineChar) {
                 newOnLength(strArr[i]);
                 if (i === strArr.length - 1) {
@@ -123,7 +123,7 @@ const padMsg = (msg, indent, newLineChar, isErr) => {
         // splitLines.push(currentLine);
         return splitLines;
     };
-    const output = (msg) => {
+    var output = function (msg) {
         if (!isErr) {
             (0, exports.log)(msg);
         }
@@ -135,8 +135,8 @@ const padMsg = (msg, indent, newLineChar, isErr) => {
         output(getIndent() + " " /* + pad(messageLength - msg.length) */);
     }
     else {
-        const multiLine = getNewLine(false, newLineChar);
-        for (let i = 0; i < multiLine.length; i += 1) {
+        var multiLine = getNewLine(false, newLineChar);
+        for (var i = 0; i < multiLine.length; i += 1) {
             output(multiLine[i]);
         }
     }
@@ -148,13 +148,13 @@ const padMsg = (msg, indent, newLineChar, isErr) => {
  * @param indent Number of times to indent (by 5 spaces)
  * @param newLineCharacter Character to trigger a new line
  */
-const logLine = (msg, indent, newLineCharacter, isErr) => {
-    const sanitizedMessage = msg || "";
-    const toIndent = indent ? indent + 1 : 1;
+var logLine = function (msg, indent, newLineCharacter, isErr) {
+    var sanitizedMessage = msg || "";
+    var toIndent = indent ? indent + 1 : 1;
     return padMsg(sanitizedMessage, toIndent, newLineCharacter, isErr);
 };
 exports.logLine = logLine;
-const test = () => {
+var test = function () {
     (0, exports.logLine)("This is a test message");
     (0, exports.logLine)("This is a second test message", 2);
     (0, exports.logLine)("This is a third message");

@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.replaceStamp = exports.dateStamp = void 0;
 /* Utilities */
-const log_1 = require("../utilities/log");
-const dateStamp = () => {
+var log_1 = require("../utilities/log");
+var dateStamp = function () {
     (0, log_1.log)("Generating Date Stamp");
-    const today = new Date();
-    const day = (() => {
-        const currentDay = today.getDate();
+    var today = new Date();
+    var day = (function () {
+        var currentDay = today.getDate();
         if (currentDay < 10) {
             return "0" + currentDay.toString();
         }
@@ -15,8 +15,8 @@ const dateStamp = () => {
             return currentDay;
         }
     })();
-    const month = (() => {
-        const currentMonth = today.getMonth() + 1;
+    var month = (function () {
+        var currentMonth = today.getMonth() + 1;
         if (currentMonth < 10) {
             return "0" + currentMonth.toString();
         }
@@ -25,17 +25,17 @@ const dateStamp = () => {
         }
     })();
     ;
-    const year = today.getFullYear();
-    return (`${year.toString().slice(2, 4)}.${month}.${day}`);
+    var year = today.getFullYear();
+    return ("".concat(year.toString().slice(2, 4), ".").concat(month, ".").concat(day));
 };
 exports.dateStamp = dateStamp;
 /**
  * Replaces **dateStamp** in any string with dateStamp
  * @param contents
  */
-const replaceStamp = (contents) => {
+var replaceStamp = function (contents) {
     (0, log_1.log)("Replacing Date Stamp");
-    const date = (0, exports.dateStamp)();
+    var date = (0, exports.dateStamp)();
     return contents.split("**dateStamp**").join(date);
 };
 exports.replaceStamp = replaceStamp;

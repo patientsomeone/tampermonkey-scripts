@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchManifest = void 0;
-const dBug_1 = require("../utilities/dBug");
-const fsUtils_1 = require("../utilities/fsUtils");
-const objecExtend_1 = require("../utilities/objecExtend");
-const srcPath_1 = require("../utilities/srcPath");
-const debManifest = new dBug_1.dBug("helpers:jsonManifest:fetchManifest");
-const propsFile = (0, srcPath_1.srcPath)("properties.i.json");
-const defaultProps = {
+var dBug_1 = require("../utilities/dBug");
+var fsUtils_1 = require("../utilities/fsUtils");
+var objecExtend_1 = require("../utilities/objecExtend");
+var srcPath_1 = require("../utilities/srcPath");
+var debManifest = new dBug_1.dBug("helpers:jsonManifest:fetchManifest");
+var propsFile = (0, srcPath_1.srcPath)("properties.i.json");
+var defaultProps = {
     helpers: {
         manifest: {
             updated: "./manifest.i.json",
@@ -15,82 +15,82 @@ const defaultProps = {
         }
     }
 };
-const fetchManifest = () => {
-    const properties = {
+var fetchManifest = function () {
+    var properties = {
         updated: "",
         pulled: ""
     };
-    let fsUpdated = new fsUtils_1.FsUtils(properties.updated);
-    let fsPulled = new fsUtils_1.FsUtils(properties.pulled);
-    const fetchProperties = () => {
-        const deb = debManifest.set("fetchProperties");
-        const fs = new fsUtils_1.FsUtils(propsFile);
+    var fsUpdated = new fsUtils_1.FsUtils(properties.updated);
+    var fsPulled = new fsUtils_1.FsUtils(properties.pulled);
+    var fetchProperties = function () {
+        var deb = debManifest.set("fetchProperties");
+        var fs = new fsUtils_1.FsUtils(propsFile);
         return fs.read.properties(defaultProps)
-            .then((props) => {
-            deb(`Manifest Properties Received`);
+            .then(function (props) {
+            deb("Manifest Properties Received");
             deb(props);
-            for (const key in props.helpers.manifest) {
+            for (var key in props.helpers.manifest) {
                 if (props.helpers.manifest.hasOwnProperty(key)) {
-                    deb(`Setting Manifest Properties for ${key}`);
+                    deb("Setting Manifest Properties for ".concat(key));
                     deb(props.helpers.manifest[key]);
                     properties[key] = props.helpers.manifest[key];
                 }
             }
         })
-            .then(() => {
+            .then(function () {
             deb("Manifest Properties Updated");
             deb(properties);
         });
     };
-    const mergeManifest = () => {
-        const deb = debManifest.set("mergeManifest");
-        let workingManifest = {};
-        const fetchUpdated = () => {
-            deb(`Checking for manifest at ${properties.updated}`);
+    var mergeManifest = function () {
+        var deb = debManifest.set("mergeManifest");
+        var workingManifest = {};
+        var fetchUpdated = function () {
+            deb("Checking for manifest at ".concat(properties.updated));
             return fsUpdated.check()
-                .then(() => {
+                .then(function () {
                 return fsUpdated.read.raw()
-                    .then((result) => {
+                    .then(function (result) {
                     deb("Updated Manifest obtained");
                     deb(result);
-                    const manifestData = JSON.parse(result.data);
+                    var manifestData = JSON.parse(result.data);
                     deb("Updated Manifest parsed");
                     deb(manifestData);
                     return Promise.resolve(manifestData);
                 });
             })
-                .catch(() => {
+                .catch(function () {
                 deb("Updated Manifest Not Located");
                 return Promise.resolve({});
             });
         };
-        const fetchPulled = () => {
-            deb(`Checking for manifest at ${properties.pulled}`);
+        var fetchPulled = function () {
+            deb("Checking for manifest at ".concat(properties.pulled));
             return fsPulled.check()
-                .then(() => {
+                .then(function () {
                 return fsPulled.read.raw()
-                    .then((result) => {
+                    .then(function (result) {
                     deb("Pulled Manifest obtained");
                     deb(result);
-                    const manifestData = JSON.parse(result.data);
+                    var manifestData = JSON.parse(result.data);
                     deb("Pulled Manifest parsed");
                     deb(manifestData);
                     return Promise.resolve(manifestData);
                 });
             })
-                .catch(() => {
+                .catch(function () {
                 deb("Pulled Manifest Not Located");
-                const emptyManfest = {};
+                var emptyManfest = {};
                 return Promise.resolve({});
             });
         };
         return fetchUpdated()
-            .then((manifest) => {
+            .then(function (manifest) {
             deb("Current manifest");
             deb(manifest);
-            const currentManifest = manifest;
+            var currentManifest = manifest;
             return fetchPulled()
-                .then((manifest) => {
+                .then(function (manifest) {
                 deb("Pulled manifest");
                 deb(manifest);
                 workingManifest = (0, objecExtend_1.objectExtend)(currentManifest, manifest);
@@ -100,28 +100,28 @@ const fetchManifest = () => {
             });
         });
     };
-    const updateManifest = (manifestData) => {
-        const deb = debManifest.set("fetchManifest:updateManifest");
+    var updateManifest = function (manifestData) {
+        var deb = debManifest.set("fetchManifest:updateManifest");
         return fsUpdated.create.json(manifestData)
-            .then(() => {
+            .then(function () {
             return Promise.resolve(manifestData);
         })
-            .catch((err) => {
+            .catch(function (err) {
             deb("something went wrong");
             deb(err);
             return Promise.reject(err);
         });
     };
-    const deb = debManifest.call();
+    var deb = debManifest.call();
     deb("BEGINNING MANIFEST FETCH");
     return fetchProperties()
-        .then(() => {
+        .then(function () {
         fsUpdated = new fsUtils_1.FsUtils((0, srcPath_1.srcPath)(properties.updated));
         fsPulled = new fsUtils_1.FsUtils((0, srcPath_1.srcPath)(properties.pulled));
         return Promise.resolve();
     })
         .then(mergeManifest)
-        .then((manifest) => {
+        .then(function (manifest) {
         deb("Manifest Merge Complete");
         deb(manifest);
         return updateManifest(manifest);

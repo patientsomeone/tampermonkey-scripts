@@ -2,28 +2,29 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Secrets = void 0;
 /* UTILITIES */
-const dBug_1 = require("../utilities/dBug");
-const fsUtils_1 = require("../utilities/fsUtils");
-const log_1 = require("../utilities/log");
-const objecExtend_1 = require("../utilities/objecExtend");
-const srcPath_1 = require("../utilities/srcPath");
-const debg = new dBug_1.dBug("utilities:fetchSecrets");
-class Secrets {
-    constructor(intendedSecrets) {
-        this.fetch = () => {
-            const fs = new fsUtils_1.FsUtils((0, srcPath_1.srcPath)("secrets.i.json"));
-            const debFetch = debg.set("Secrets:fetch");
+var dBug_1 = require("../utilities/dBug");
+var fsUtils_1 = require("../utilities/fsUtils");
+var log_1 = require("../utilities/log");
+var objecExtend_1 = require("../utilities/objecExtend");
+var srcPath_1 = require("../utilities/srcPath");
+var debg = new dBug_1.dBug("utilities:fetchSecrets");
+var Secrets = /** @class */ (function () {
+    function Secrets(intendedSecrets) {
+        var _this = this;
+        this.fetch = function () {
+            var fs = new fsUtils_1.FsUtils((0, srcPath_1.srcPath)("secrets.i.json"));
+            var debFetch = debg.set("Secrets:fetch");
             debFetch("Fetching Secrets");
-            return fs.read.properties(this.intendedSecrets)
-                .then((props) => {
+            return fs.read.properties(_this.intendedSecrets)
+                .then(function (props) {
                 debFetch("Secrets Received");
                 debFetch(props);
-                this.secrets = (0, objecExtend_1.objectExtend)(this.intendedSecrets, props);
+                _this.secrets = (0, objecExtend_1.objectExtend)(_this.intendedSecrets, props);
                 debFetch("Secrets Set");
-                debFetch(this.secrets);
-                return Promise.resolve(this.secrets);
+                debFetch(_this.secrets);
+                return Promise.resolve(_this.secrets);
             })
-                .catch((err) => {
+                .catch(function (err) {
                 debFetch("Something went wrong");
                 debFetch(err);
                 return Promise.reject(err);
@@ -32,10 +33,11 @@ class Secrets {
         this.secrets = {};
         this.intendedSecrets = intendedSecrets;
     }
-}
+    return Secrets;
+}());
 exports.Secrets = Secrets;
-const test = () => {
-    const testProps = new Secrets({
+var test = function () {
+    var testProps = new Secrets({
         test: "tested",
         anotherTest: {
             successA: true,
