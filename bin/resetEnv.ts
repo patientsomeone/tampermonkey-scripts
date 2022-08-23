@@ -27,8 +27,8 @@ const debLog = (msg) => {
 };
 
 const promiseLoop = (
-    data: anyObject | anyStandard[],
-    forEach: (data: anyObject | anyStandard[], key: string | number) => Promise<void>
+    data: anyObject | anyStandard[] | fs.Dirent[],
+    forEach: (dataReturned: anyObject | anyStandard | fs.Dirent, key: string | number) => Promise<void>
 ) => {
     return new Promise((resolve: (value: void) => void, reject) => {
         if (Array.isArray(data)) {
@@ -41,7 +41,7 @@ const promiseLoop = (
                 if (typeof forEach === "function") {
                     void (async () => {
                         /* Do Work */
-                        await forEach(arr, i).catch((err) => {
+                        await forEach(current, i).catch((err) => {
                             console.error(err);
 
                             reject(err);
@@ -76,7 +76,7 @@ const promiseLoop = (
     });
 };
 
-const removeFile = (path: string) => {
+const removePath = (path: string) => {
     const processError = (err: {message?: string;}) => {
         if (err.message.indexOf("no such file or directory") >= 0) {
             debLog("removeFile.newPromise.processError.if.no_such_file");
@@ -93,61 +93,7 @@ const removeFile = (path: string) => {
         console.error(err);
         return processError(err);
     });
-
-    // return new Promise((resolve, reject) => {
-    //     debLog("removeFile.newPromise");
-
-    //     const processError = (err) => {
-    //         if (err.message.indexOf("no such file or directory") >= 0) {
-    //             debLog("removeFile.newPromise.processError.if.no_such_file");
-    //             console.log(`File ${path} does not exist, continuing.`);
-    //             resolve();
-    //         } else {
-    //             debLog("removeFile.newPromise.processError.if.else.no_such_file");
-    //             console.error(err);
-    //             reject(err);
-    //         }
-    //     };
-
-    //     void (async() => {
-    //         /** Process File Deletion */
-
-    //         await fs.unlink(`${__dirname}/${path}`, (err) => {
-    //             if (err) {
-    //                 debLog("removeFile.newPromise.processError.fs.unlink.if.err");
-    //                 processError(err);
-    //             } else {
-    //                 console.log(`Removed ${path}`);
-
-    //                 resolve();
-    //             }
-    //     })();
-
-    //     });
-    // });
 };
-
-// const removeFiles = async(files) => {
-//     let errors = 0;
-
-//     for (let i = files.length - 1; i >= 0; i -= 1) {
-//         await removeFile(files[i])
-//             .catch((err) => {
-//                 debFunc("RemoveFiles.removeFile.catch");
-//                 console.log(err);
-//                 errors += 1;
-//             });
-//     }
-
-//     if (errors > 0) {
-//         debFunc("removeFiles.if.errors");
-//         return Promise.reject("Not All Files Removed");
-//     } else {
-//         debFunc("removeFiles.if.else.errors");
-//         return Promise.resolve();
-//     }
-
-// };
 
 const clean = (path: string): Promise<void> => {
     console.log("\x1b[44m\x1b[37m%s\x1b[0m", `Would Begin Cleaning ${path}`);
@@ -169,77 +115,121 @@ const removeDirent = (path: string) => {
         });
 };
 
-const processDirents = async (folder) => {
+const processDirents = async (path: string) => {
     const processedPaths = [];
 
-    return new Promise(async (resolve, reject) => {
-        // Read all files in Directory
-        await fs.readdir(folder, {withFileTypes: true}, (err, files) => {
-            if (!err) {
-                console.log("Directory Ready");
-                console.log(files);
-                return resolve(files);
-            } else {
-                console.error("Failed to read Directory");
-                console.log(err);
-                return reject(err);
-            }
-        });
-    })
-        .then(async (files) => {
-            return new Promise(async (resolve, reject) => {
-                const workingFolderTree = [];
+    return readdir(path, {withFileTypes: true})
+    .then((files) => {
+        const workingFolderTree = [];
 
-                promiseLoop(files, (currentFile) => {
-                    return checkEntry(currentFile)
-                        .then((processedPath) => {
-                            workingFolderTree.push(processedPath);
-                            return Promise.resolve(workingFolderTree);
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                            return Promise.reject(err);
-                        });
+        promiseLoop(files, (currentFile, key) => {
+            return checkEntry(currentFile)
+                .then((processedPath) => {
+                    workingFolderTree.push(processedPath);
+                    return Promise.resolve();
                 })
-                    .then((data) => {
-                        if (workingFolderTree.length > 0) {
-                            debLog("clean.fs.readdir.then.if.workingFolderTree.toResolve");
-                            return resolve(workingFolderTree);
-                        } else {
-                            debLog("clean.fs.readdir.then.if.workingFolderTree.toReject");
-                            return reject("Something went wrong");
-                        }
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                        return Promise.reject(err);
-                    });
+                .catch((err) => {
+                    console.log(err);
+                    return Promise.reject(err);
+                });
+        })
+            .then((data) => {
+                if (workingFolderTree.length > 0) {
+                    debLog("clean.fs.readdir.then.if.workingFolderTree.toResolve");
+                    return resolve(workingFolderTree);
+                } else {
+                    debLog("clean.fs.readdir.then.if.workingFolderTree.toReject");
+                    return reject("Something went wrong");
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                return Promise.reject(err);
             });
-        })
-        .then((data) => {
-            /* Do Work */
+    })
+    .then((data) => {
+        /* Do Work */
 
-            return Promise.resolve(data);
-        })
-        .catch((err) => {
-            console.error(err);
+        return Promise.resolve(data);
+    })
+    .catch((err) => {
+        console.error(err);
 
-            /* Do Work */
+        /* Do Work */
 
-            return Promise.reject(err);
-        });
+        return Promise.reject(err);
+    });
+
+    // return new Promise(async (resolve, reject) => {
+    //     // Read all files in Directory
+    //     await fs.readdir(path, {withFileTypes: true}, (err, files) => {
+    //         if (!err) {
+    //             console.log("Directory Ready");
+    //             console.log(files);
+    //             return resolve(files);
+    //         } else {
+    //             console.error("Failed to read Directory");
+    //             console.log(err);
+    //             return reject(err);
+    //         }
+    //     });
+    // })
+    //     .then(async (files) => {
+    //         return new Promise(async (resolve, reject) => {
+    //             const workingFolderTree = [];
+
+    //             promiseLoop(files, (currentFile) => {
+    //                 return checkEntry(currentFile)
+    //                     .then((processedPath) => {
+    //                         workingFolderTree.push(processedPath);
+    //                         return Promise.resolve(workingFolderTree);
+    //                     })
+    //                     .catch((err) => {
+    //                         console.log(err);
+    //                         return Promise.reject(err);
+    //                     });
+    //             })
+    //                 .then((data) => {
+    //                     if (workingFolderTree.length > 0) {
+    //                         debLog("clean.fs.readdir.then.if.workingFolderTree.toResolve");
+    //                         return resolve(workingFolderTree);
+    //                     } else {
+    //                         debLog("clean.fs.readdir.then.if.workingFolderTree.toReject");
+    //                         return reject("Something went wrong");
+    //                     }
+    //                 })
+    //                 .catch((err) => {
+    //                     console.error(err);
+    //                     return Promise.reject(err);
+    //                 });
+    //         });
+    //     })
+    //     .then((data) => {
+    //         /* Do Work */
+
+    //         return Promise.resolve(data);
+    //     })
+    //     .catch((err) => {
+    //         console.error(err);
+
+    //         /* Do Work */
+
+    //         return Promise.reject(err);
+    //     });
 };
 
 const listDirents = async (allDirectories: string[]) => {
     const allDirents = [];
     const errors = 0;
 
-    return await promiseLoop(allDirectories, async (currentFolder) => {
-        return await processDirents(currentFolder)
-            .then((data) => {
-                allDirents.push(data);
+    return await promiseLoop(allDirectories, (currentFolder) => {
+        const currentDirectory = currentFolder as fs.Dirent;
 
-                return Promise.resolve(data);
+        return processDirents(currentDirectory.name)
+            .then((pathNames) => {
+                allDirents.push(pathNames);
+
+                return Promise.resolve(pathNames);
             })
             .catch((err) => {
                 console.error(err);
