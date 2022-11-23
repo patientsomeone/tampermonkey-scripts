@@ -1,6 +1,6 @@
 import * as async from "async";
 import * as debug from "debug";
-import {anyStandard} from "../globalTypes";
+import {anyStandard} from "../sites/arlo/globalTypes";
 
 import {log, logLine} from "../utilities/log";
 import {CSV, csvRow} from "../utilities/processCSV";

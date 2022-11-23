@@ -34,7 +34,7 @@ module.exports = {
                     },
                     singleline: {
                         delimiter: "semi",
-                        requireLast: true
+                        requireLast: false
                     }
                 }
             ],
@@ -80,7 +80,7 @@ module.exports = {
         ],
         "id-match": "error",
         "max-classes-per-file": ["error", 1],
-        "max-len": ["error", { code: 120 }],
+        "max-len": ["warn", { code: 140 }],
         "new-parens": "error",
         "no-bitwise": "error",
         "no-caller": "error",
@@ -138,7 +138,7 @@ module.exports = {
         "prefer-const": "error",
         "quote-props": "off",
         radix: "error",
-        semi: "off",
+        semi: "error",
         "spaced-comment": [
             "error",
             "always",

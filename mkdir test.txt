@@ -1,0 +1,7 @@
+mkdir test
+cd test
+touch test.txt
+mkdir sub
+touch testSub.txt
+mkdir sub/sub2
+touch sub/sub2/sub2.txt
