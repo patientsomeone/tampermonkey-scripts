@@ -21,7 +21,7 @@ class Character {
         return this.characterHealth;
     };
 }
-export const tmTest = () => {
+const tmTest = () => {
     console.warn("Running Tampermonkey Test");
     return;
 };

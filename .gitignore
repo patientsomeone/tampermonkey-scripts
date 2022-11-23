@@ -4,9 +4,6 @@
 # Ignore any file or folder by .i. flag
 *.i.*
 
-# Ignore Package Lock file
-package-lock.json
-
 # Ignore node modules
 **/node_modules/*
 

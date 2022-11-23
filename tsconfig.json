@@ -5,12 +5,12 @@
   },
   "compilerOptions": {
     "resolveJsonModule": true,
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "outDir": ".dist",
     "sourceMap": false
   },
-  "include": [".src/**/*.ts", "**/.*.ts", ".src/.i.*", ".src/subfolder/marchexProcessor.i.ts", ".src/.ts.i.header.ts", ".src/roll20/.r20Types.d.ts"],
+  "include": [".src/**/*.ts", "*.ts", "**/.*.ts", ".src/.i.*"],
   "exclude": ["**/node_modules/**", "**/*.spec.ts", "**/*.ts.i.*"],
   "types": ["google-apps-script"]
 }
